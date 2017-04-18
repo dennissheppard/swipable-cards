@@ -1,11 +1,11 @@
 @import 'platform.css';
 
 Page {
-    background-color: #F8DECF;
+    background-color: #3692CC;
 } 
 .action-bar {
-    background-color:#F67982;
-    color: #FAEEC3;
+    background-color:#36C5F4;
+    color: white;
 }   
 .btn {
     border-width: 5;

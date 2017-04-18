@@ -1,5 +1,6 @@
 import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
+import { NativeScriptHttpModule } from "nativescript-angular/http";
 import { AppRoutingModule } from "./app.routing";
 import { AppComponent } from "./app.component";
 
@@ -8,6 +9,7 @@ import { CardComponent } from "./cards/card.component";
 
 //fonts
 import {TNSFontIconModule, TNSFontIconService, TNSFontIconPipe, TNSFontIconPurePipe} from 'nativescript-ngx-fonticon';
+import { ApiService } from './api/api.service';
 
 
 @NgModule({
@@ -17,6 +19,7 @@ import {TNSFontIconModule, TNSFontIconService, TNSFontIconPipe, TNSFontIconPureP
     imports: [
         NativeScriptModule,
         AppRoutingModule,
+        NativeScriptHttpModule,
         TNSFontIconModule.forRoot({
             'fa': 'fonts/font-awesome.css'
         }),
@@ -26,7 +29,8 @@ import {TNSFontIconModule, TNSFontIconService, TNSFontIconPipe, TNSFontIconPureP
         CardComponent
     ],
     providers: [
-        CardService
+        CardService,
+        ApiService
     ],
     schemas: [
         NO_ERRORS_SCHEMA

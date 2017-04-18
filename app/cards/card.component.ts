@@ -4,9 +4,10 @@ import { GridLayout } from "ui/layouts/grid-layout";
 import { AbsoluteLayout } from "ui/layouts/absolute-layout";
 import { Label } from "ui/label";
 import { Button } from "ui/button";
+import { Image } from "ui/image";
 import { CardService } from './card.service';
-import { Emoji } from './emoji';
 import { TNSFontIconService } from 'nativescript-ngx-fonticon';
+import { School } from './school';
 
 @Component({
     moduleId: module.id,
@@ -19,8 +20,7 @@ export class CardComponent implements OnInit {
         private fonticon: TNSFontIconService
     ) { }
 
-    emoji: Emoji[];
-    code: string;
+    schools: School[];
     i: number = 0;
 
     @ViewChild("absolutelayout") al: ElementRef;
@@ -30,41 +30,49 @@ export class CardComponent implements OnInit {
     @ViewChild("swiperight") swiperight: ElementRef;
 
     ngOnInit() {
-        this.emoji = this.cardService.getEmoji();
-        //initial card
-        this.code = this.emoji[this.i].code;
-        //get ready for the swiping!
-        for (var key in this.emoji) {
-            this.handleSwipe(key);
-        }
+        console.log('IN CARD COMPONENT');
+        this.cardService.filterSchools()
+            .subscribe((response) => {
+                this.schools = response.results;
+                console.log(this.schools);
+                //get ready for the swiping!
+                for (var key in this.schools) {
+                    this.handleSwipe(key);
+                }
+            }, (error) => {
+                console.log('ERRORS EVERYWHERE!!! ' + error);
+            });
+
     }
 
     handleSwipe(key: any) {
 
         this.i--;
+        let currentSchool = this.schools[key];
 
         let grid = new GridLayout();
-        let emoji = new Label();
+        let collegeName = new Label();
+        let bgImage = new Image();
+        bgImage.src = currentSchool.photo_url;
 
         let yes = <Label>this.yes.nativeElement;
         let no = <Label>this.no.nativeElement;
         let absolutelayout = <AbsoluteLayout>this.al.nativeElement;
-        let swipeleft = <Button>this.swipeleft.nativeElement;
-        let swiperight = <Button>this.swiperight.nativeElement;
 
-        //set the emoji on the card
-        emoji.text = this.emoji[key].code;
+        //set the text on the card
+        collegeName.text = currentSchool.name;
         //android specific
-        emoji.verticalAlignment = "center";
+        collegeName.verticalAlignment = "center";
 
         //build the grid which is the card
-        grid.cssClass = 'card ' + this.emoji[key].color;
-        grid.id = 'card' + Number(key);
+        grid.cssClass = 'card ';//  + currentSchool.imageUrl;
+        grid.id = 'card' + currentSchool.id;
         grid.marginTop = this.i;
         
         //add the emoji to the grid, and the grid to the absolutelayout
-        grid.addChild(emoji);
-        absolutelayout.addChild(grid)
+        grid.addChild(collegeName);
+        grid.addChild(bgImage);
+        absolutelayout.addChild(grid);
 
         //handle tapping
         /*swiperight.addEventListener("tap", function(){
